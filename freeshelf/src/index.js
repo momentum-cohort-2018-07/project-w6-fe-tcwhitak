@@ -39,6 +39,18 @@ class BookEntry extends Component {
       displayExtraInfo: false
     }
   }
+
+  handleClick (e) {
+    console.log('clicked', e)
+    this.state.displayExtraInfo
+      ? this.setState({
+        displayExtraInfo: false
+      })
+      : this.setState({
+        displayExtraInfo: true
+      })
+  }
+
   render () {
     return (
       <div className='bookEntry'>
@@ -55,11 +67,9 @@ class BookEntry extends Component {
           <img src={this.props.cover} alt='book cover' />
         </div>
         {this.state.displayExtraInfo ? (
-          <div id='extraInfo' className='hidden'>
-            <div className='less'>
-              <a href='#'>
-                less
-              </a>
+          <div className='extraInfo'>
+            <div className='less' onClick={(e) => this.handleClick(e)}>
+              less
             </div>
             <div className='url'>
               {this.props.url}
@@ -75,11 +85,8 @@ class BookEntry extends Component {
             </div>
           </div>
         )
-
-          : <div className='more'>
-            <a href='#'>
-                more
-            </a>
+          : <div className='more' onClick={(e) => this.handleClick(e)}>
+              more
           </div>
         }
 
