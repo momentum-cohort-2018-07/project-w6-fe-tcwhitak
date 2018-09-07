@@ -48,12 +48,13 @@ class BookEntry extends Component {
     super(props)
     this.state = {
       displayExtraInfo: false,
-      imageError: false
+      imageError: false,
+      editing: false
     }
   }
 
-  handleClick (e) {
-    console.log('clicked', e)
+  showDetail (e) {
+    // console.log('clicked', e)
     this.state.displayExtraInfo
       ? this.setState({
         displayExtraInfo: false
@@ -66,6 +67,13 @@ class BookEntry extends Component {
   handleImageError (e) {
     this.setState({
       imageError: true
+    })
+  }
+
+  startEdit (e) {
+    console.log('edit started')
+    this.setState({
+      editing: true
     })
   }
 
@@ -85,8 +93,13 @@ class BookEntry extends Component {
 
           {this.state.displayExtraInfo ? (
             <div className='extraInfo'>
-              <div className='less button' onClick={(e) => this.handleClick(e)}>
-              less
+              <div className='buttons'>
+                <a className='less button' onClick={(e) => this.showDetail(e)}>
+                  less
+                </a>
+                <a className='edit button' onClick={(e) => this.startEdit(e)}>
+                  edit
+                </a>
               </div>
               <div className='url extraItem'>
                 <span className='label'>URL: </span>
@@ -106,8 +119,13 @@ class BookEntry extends Component {
               </div>
             </div>
           )
-            : <div className='more button' onClick={(e) => this.handleClick(e)}>
+            : <div className='buttons'>
+              <a className='more button' onClick={(e) => this.showDetail(e)}>
               more
+              </a>
+              <a className='edit button' onClick={(e) => this.startEdit(e)}>
+              edit
+              </a>
             </div>
           }
         </div>
