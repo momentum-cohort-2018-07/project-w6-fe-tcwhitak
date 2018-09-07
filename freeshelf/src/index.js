@@ -1,23 +1,31 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
-import books from './books.json'
+import request from 'superagent'
 
 class App extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      books: books
+      books: []
     }
   }
 
+  componentDidMount () {
+    request.get('http://localhost:3001/books')
+      .then(res => {
+        this.setState({
+          books: res.body
+        })
+      })
+  }
   render () {
     return (
       <div className='App'>
         {this.state.books.map((book, idx) =>
-          <div>
+          <div key={idx} className='book-wrapper'>
             <BookEntry
-              key={idx}
+              key={book.id}
               title={book.title}
               author={book.author}
               shortDescription={book.shortDescription}
