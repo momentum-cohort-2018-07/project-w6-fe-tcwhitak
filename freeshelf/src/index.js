@@ -37,20 +37,17 @@ class App extends Component {
     })
   }
 
-  editBook (bookId, title, author, shortDescription, url, publisher, publicationDate, detailedDescription, coverImageUrl) {
-    const book = this.state.books.find(book => book.id === bookId)
-    book.title = title
-    book.author = author
-    book.shortDescription = shortDescription
-    book.url = url
-    book.publisher = publisher
-    book.publicationDate = publicationDate
-    book.detailedDescription = detailedDescription
-    book.coverImageUrl = coverImageUrl
-    this.setState({
-      books: this.state.books
+  updateBook (bookId, field, newValue) {
+    this.setState(state => {
+      let book = state.books.find(b => b.id === bookId)
+      book[field] = newValue
+      // Returning state.books because we've changed the data in it and
+      // we need React to know that it should update.
+      this.updateBookInApi(book)
+      return {
+        books: state.books
+      }
     })
-    this.updateBookInApi(book)
   }
 
   render () {
@@ -59,7 +56,7 @@ class App extends Component {
         {this.state.books.map((book, idx) =>
           <div key={idx} className='book-wrapper'>
             <BookEntry
-              key={book.id}
+              id={book.id}
               title={book.title}
               author={book.author}
               shortDescription={book.shortDescription}
@@ -68,8 +65,7 @@ class App extends Component {
               publisher={book.publisher}
               publicationDate={book.publicationDate}
               detailedDescription={book.detailedDescription}
-              editBook={(bookId, title, author, shortDescription, url, publisher, publicationDate, detailedDescription, coverImageUrl) =>
-                this.editBook(bookId, title, author, shortDescription, url, publisher, publicationDate, detailedDescription, coverImageUrl)}
+              updateBook={this.updateBook.bind(this)}
             />
             <hr className='divider' />
           </div>
@@ -117,9 +113,9 @@ class BookEntry extends Component {
   finishEdit (e) {
     console.log('edit complete')
 
-    // this.setState({
-    //   editing: false
-    // })
+    this.setState({
+      editing: false
+    })
   }
 
   render () {
@@ -186,13 +182,38 @@ class BookEntry extends Component {
           </div>
         </div>
         : <div className='editEntry'>
-          <input className='input editTitle' defaultValue={this.props.title} />
-          <input className='input editAuthor' defaultValue={this.props.author} />
-          <textarea className='textArea editDescription' defaultValue={this.props.shortDescription} />
-          <input className='input editUrl' defaultValue={this.props.url} />
-          <input className='input editPublisher' defaultValue={this.props.publisher} />
-          <input className='input editPublicationDate' defaultValue={this.props.publicationDate} />
-          <input className='input editDetailedDescription' defaultValue={this.props.detailedDescription} />
+          <input name='title' className='input editTitle' defaultValue={this.props.title}
+            onChange={event => {
+              this.props.updateBook(this.props.id, 'title', event.target.value)
+            }} />
+          <input name='author' className='input editAuthor' defaultValue={this.props.author}
+            onChange={event => {
+              this.props.updateBook(this.props.id, 'author', event.target.value)
+            }} />
+          <textarea name='shortDescription' className='textArea editDescription' defaultValue={this.props.shortDescription}
+            onChange={event => {
+              this.props.updateBook(this.props.id, 'shortDescription', event.target.value)
+            }} />
+          <input name='url' className='input editUrl' defaultValue={this.props.url}
+            onChange={event => {
+              this.props.updateBook(this.props.id, 'url', event.target.value)
+            }}
+          />
+          <input name='publisher' className='input editPublisher' defaultValue={this.props.publisher}
+            onChange={event => {
+              this.props.updateBook(this.props.id, 'publisher', event.target.value)
+            }}
+          />
+          <input name='publicationDate' className='input editPublicationDate' defaultValue={this.props.publicationDate}
+            onChange={event => {
+              this.props.updateBook(this.props.id, 'publicationDate', event.target.value)
+            }}
+          />
+          <input name='detailedDescription' className='input editDetailedDescription' defaultValue={this.props.detailedDescription}
+            onChange={event => {
+              this.props.updateBook(this.props.id, 'detailedDescription', event.target.value)
+            }}
+          />
           <a className='edit button' onClick={(e) => this.finishEdit(e)}>
                   update
           </a>
